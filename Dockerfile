@@ -27,6 +27,9 @@ RUN npm install
 
 COPY . .
 
+# IMPORTANT: copy vendor folder from composer stage
+COPY --from=composer /app/vendor ./vendor
+
 RUN npm run build
 
 # ==========================
@@ -61,11 +64,9 @@ COPY --from=composer /app /var/www
 
 COPY --from=frontend /app/public/build /var/www/public/build
 
-RUN chown -R www-data:www-data \
-    storage bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-RUN chmod -R 775 \
-    storage bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 9000
 
